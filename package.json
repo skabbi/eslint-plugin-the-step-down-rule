@@ -1,0 +1,28 @@
+{
+  "name": "eslint-plugin-the-step-down-rule",
+  "version": "0.0.1",
+  "description": "Enforces that functions follow a top-down call structure when calling a lower-level function.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node ./tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skabbi/eslint-plugin-the-step-down-rule.git"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "the-step-down-rule"
+  ],
+  "author": "Skabbi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skabbi/eslint-plugin-the-step-down-rule/issues"
+  },
+  "homepage": "https://github.com/skabbi/eslint-plugin-the-step-down-rule#readme",
+  "devDependencies": {
+    "eslint": "^6.6.0"
+  }
+}
