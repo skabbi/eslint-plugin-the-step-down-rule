@@ -26,13 +26,15 @@ b();
 
 ##### Bad
 ```js
+a();
+
 function a() {
   b();
 }
 
 const b = () => {};
 
-function c() => {
+function c() {
   b();
 }
 ```

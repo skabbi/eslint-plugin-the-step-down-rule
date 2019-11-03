@@ -148,6 +148,8 @@ ruleTester.run("the-step-down-rule", rule, {
     },
     {
       code: `
+        a();
+
         function a() {
           b();
         }
@@ -158,7 +160,10 @@ ruleTester.run("the-step-down-rule", rule, {
           b();
         }
       `,
-      errors: [{ message: `'b' ${errMsg}` }]
+      errors: [
+        { message: `'a' ${errMsg}` },
+        { message: `'b' ${errMsg}` }
+      ]
     },
     {
       code: `   
