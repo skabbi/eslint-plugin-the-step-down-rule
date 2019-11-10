@@ -18,7 +18,7 @@ ruleTester.run("the-step-down-rule", rule, {
     {
       code: `
         const a = require('aaa');
-  
+
         function b() {
           a();
         }
@@ -94,19 +94,45 @@ ruleTester.run("the-step-down-rule", rule, {
     },
     {
       code: `
+        const str = "";
+
+        function a() {
+          b(str);
+        }
+
+        function b(x) {}
+      `,
+    },
+    {
+      code: `
+        const str = "";
+
+        function a() {
+          b(str);
+        }
+
+        function b(x) {
+          c(x);
+        }
+
+        function c(x) {}
+      `,
+    },
+    {
+      code: `
         const a = require('a');
 
         function b() {
           a();
           d();
         }
-        
+
         function c() {
           d();
         }
-        
+
         const d = () => {};
-        
+
         b();
       `,
     },
@@ -115,18 +141,18 @@ ruleTester.run("the-step-down-rule", rule, {
         function a() {
           b();
         }
-        
+
         function c() {
           b();
           d();
         }
-        
+
         function b() {
           e();
         }
-        
+
         function e() {}
-        
+
         function d() {}
 
         a();
@@ -153,7 +179,7 @@ ruleTester.run("the-step-down-rule", rule, {
         function a() {
           b();
         }
-        
+
         function b() {}
 
         const c = () => {
@@ -169,22 +195,22 @@ ruleTester.run("the-step-down-rule", rule, {
       code: `   
         a();
         c();
-        
+
         function a() {
           b();
         }
-        
+
         function c() {
           b();
           d();
         }
-        
+
         function e() {}
 
         function b() {
           e();
         }
-                
+
         function d() {}
       `,
       errors: [
