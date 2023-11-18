@@ -137,7 +137,7 @@ ruleTester.run("the-step-down-rule", rule, {
       `,
     },
     {
-      code: `        
+      code: `
         function a() {
           b();
         }
@@ -159,6 +159,170 @@ ruleTester.run("the-step-down-rule", rule, {
         c();
       `,
     },
+    {
+      code: `
+        function highLevelFunction() {
+            midLevelFunction();
+        }
+        
+        function midLevelFunction() {
+            lowLevelFunction();
+        }
+        
+        function lowLevelFunction() {
+            // implementation
+        }
+      `,
+    },
+    {
+      code: `
+        // Functions with no calls
+        function independentFunctionOne() {
+            // implementation
+        }
+        
+        function independentFunctionTwo() {
+            // implementation
+        }
+      `,
+    },
+    {
+      code: `
+        // Recursive function
+        function recursiveFunction() {
+            if (condition) {
+                recursiveFunction();
+            }
+        }
+      `,
+    },
+    {
+      code: `
+        // External function calls
+        function highLevelFunction() {
+            externalFunction();
+        }
+      `,
+    },
+    {
+      code: `
+        // Nested functions
+        function outerFunction() {
+          function innerFunction() {
+              // implementation
+          }
+          innerFunction();
+        }
+      `,
+    },
+    {
+      code: `
+        class ExampleClass {
+          highLevelMethod() {
+              this.midLevelMethod();
+          }
+
+          midLevelMethod() {
+              this.lowLevelMethod();
+          }
+
+          lowLevelMethod() {
+              // Implementation details
+          }
+      }
+      `,
+    },
+    {
+      code: `
+        class RecursiveClass {
+          startProcess() {
+              this.processStep(5);
+          }
+
+          processStep(steps) {
+              if (steps > 0) {
+                  this.processStep(steps - 1);
+              }
+          }
+      }
+      `,
+    },
+    {
+      code: `
+        class StaticInstanceClass {
+          static staticMethod() {
+              // Static method implementation
+          }
+
+          instanceMethod() {
+              StaticInstanceClass.staticMethod();
+          }
+        }
+      `,
+    },
+    {
+      code: `
+        class StaticInstanceClass {
+          static staticMethod1() {
+              // Static method implementation
+          }
+          static staticMethod2() {
+            // Static method implementation
+          }
+
+          instanceMethod1() {
+              StaticInstanceClass.staticMethod1();
+          }
+          instanceMethod2() {
+            StaticInstanceClass.staticMethod2();
+          }
+        }
+      `,
+    },
+    {
+      code: `
+        class MixedMethodClass {
+          instanceMethod() {
+              MixedMethodClass.staticMethod();
+          }
+
+          static staticMethod() {
+              // Some implementation
+          }
+        }
+      `,
+    },
+    {
+      code: `
+        class MixedMethodClass {
+          static staticMethod() {
+              const instance = new MixedMethodClass();
+              instance.instanceMethod();
+          }
+
+          instanceMethod() {
+              // Some implementation
+          }
+      }
+      `,
+    },
+    {
+      code: `
+        class InterleavedMethodClass {
+          static firstStaticMethod() {
+              // Some implementation
+          }
+
+          instanceMethod() {
+              InterleavedMethodClass.secondStaticMethod();
+          }
+
+          static secondStaticMethod() {
+              // Some implementation
+          }
+       }
+       `,
+    }
   ],
 
   invalid: [
@@ -218,6 +382,69 @@ ruleTester.run("the-step-down-rule", rule, {
         { message: `'c' ${errMsg}` },
         { message: `'e' ${errMsg}` },
       ]
-    }
+    },
+    {
+      code: `
+        function lowLevelFunction() {
+            // implementation
+        }
+        
+        function highLevelFunction() {
+            lowLevelFunction();
+        }
+      `,
+      errors: [{ message: `'lowLevelFunction' ${errMsg}` }]
+    },
+
+    {
+      code: `
+        class ExampleClass {
+          midLevelMethod() {
+              this.lowLevelMethod();
+          }
+
+          highLevelMethod() {
+              this.midLevelMethod();
+          }
+
+          lowLevelMethod() {
+              // Implementation details
+          }
+      }
+      `,
+      errors: [{ message: `'midLevelMethod' ${errMsg}` }]
+    },
+    {
+      code: `
+        class ExampleClass {
+          midLevelMethod() {
+              this.lowLevelMethod();
+          }
+
+          highLevelMethod() {
+              this.midLevelMethod();
+          }
+
+          lowLevelMethod() {
+              // Implementation details
+          }
+      }
+      `,
+      errors: [{ message: `'midLevelMethod' ${errMsg}` }]
+    },
+    {
+      code: `
+        class ExternalDependencyClass {
+          firstMethod() {
+              externalFunction();
+          }
+
+          secondMethod() {
+              this.firstMethod();
+          }
+      }
+      `,
+      errors: [{ message: `'firstMethod' ${errMsg}` }]
+    },
   ]
 });
