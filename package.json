@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-the-step-down-rule",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Enforces that functions follow a top-down call structure when calling a lower-level function.",
   "main": "lib/index.js",
   "scripts": {
