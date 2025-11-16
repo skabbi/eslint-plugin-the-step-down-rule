@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/skabbi/eslint-plugin-the-step-down-rule#readme",
   "devDependencies": {
-    "eslint": "^6.6.0"
+    "eslint": "^9.39.1"
   }
 }
