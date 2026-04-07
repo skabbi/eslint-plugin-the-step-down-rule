@@ -360,6 +360,25 @@ ruleTester.run("the-step-down-rule", rule, {
         ecmaVersion: 2022,
         sourceType: "module",
       }
+    },
+    {
+      code: `
+        class FirstClass {
+          #helper() {}
+        }
+
+        class SecondClass {
+          run() {
+              this.#helper();
+          }
+
+          #helper() {}
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      }
     }
   ],
 
@@ -487,6 +506,26 @@ ruleTester.run("the-step-down-rule", rule, {
         sourceType: "module",
       },
       errors: [{ message: `'#midLevelMethod' ${errMsg}` }]
+    },
+    {
+      code: `
+        class FirstClass {
+          #helper() {}
+        }
+
+        class SecondClass {
+          #helper() {}
+
+          run() {
+              this.#helper();
+          }
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      },
+      errors: [{ message: `'#helper' ${errMsg}` }]
     },
   ]
 });
