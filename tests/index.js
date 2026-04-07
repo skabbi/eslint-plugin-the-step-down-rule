@@ -6,7 +6,7 @@ const rule = require("../lib/rules/the-step-down-rule");
 const errMsg = "Does not follow a top-down call structure";
 
 const ruleTester = new RuleTester({
-  parserOptions: {
+  languageOptions: {
     ecmaVersion: 6,
     sourceType: "module",
   }
@@ -322,6 +322,63 @@ ruleTester.run("the-step-down-rule", rule, {
           }
        }
        `,
+    },
+    {
+      code: `
+        class PrivateMethodClass {
+          publicMethod() {
+              this.#midLevelMethod();
+          }
+
+          #midLevelMethod() {
+              this.#lowLevelMethod();
+          }
+
+          #lowLevelMethod() {
+              // Implementation details
+          }
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      }
+    },
+    {
+      code: `
+        class MixedVisibilityMethodClass {
+          name() {}
+
+          publicMethod() {
+              this.#name();
+          }
+
+          #name() {}
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      }
+    },
+    {
+      code: `
+        class FirstClass {
+          #helper() {}
+        }
+
+        class SecondClass {
+          run() {
+              this.#helper();
+          }
+
+          #helper() {}
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      }
     }
   ],
 
@@ -416,24 +473,6 @@ ruleTester.run("the-step-down-rule", rule, {
     },
     {
       code: `
-        class ExampleClass {
-          midLevelMethod() {
-              this.lowLevelMethod();
-          }
-
-          highLevelMethod() {
-              this.midLevelMethod();
-          }
-
-          lowLevelMethod() {
-              // Implementation details
-          }
-      }
-      `,
-      errors: [{ message: `'midLevelMethod' ${errMsg}` }]
-    },
-    {
-      code: `
         class ExternalDependencyClass {
           firstMethod() {
               externalFunction();
@@ -445,6 +484,48 @@ ruleTester.run("the-step-down-rule", rule, {
       }
       `,
       errors: [{ message: `'firstMethod' ${errMsg}` }]
+    },
+    {
+      code: `
+        class PrivateMethodClass {
+          #midLevelMethod() {
+              this.#lowLevelMethod();
+          }
+
+          publicMethod() {
+              this.#midLevelMethod();
+          }
+
+          #lowLevelMethod() {
+              // Implementation details
+          }
+      }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      },
+      errors: [{ message: `'#midLevelMethod' ${errMsg}` }]
+    },
+    {
+      code: `
+        class FirstClass {
+          #helper() {}
+        }
+
+        class SecondClass {
+          #helper() {}
+
+          run() {
+              this.#helper();
+          }
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      },
+      errors: [{ message: `'#helper' ${errMsg}` }]
     },
   ]
 });
