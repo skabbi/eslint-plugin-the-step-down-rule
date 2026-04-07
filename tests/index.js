@@ -343,6 +343,23 @@ ruleTester.run("the-step-down-rule", rule, {
         ecmaVersion: 2022,
         sourceType: "module",
       }
+    },
+    {
+      code: `
+        class MixedVisibilityMethodClass {
+          name() {}
+
+          publicMethod() {
+              this.#name();
+          }
+
+          #name() {}
+        }
+      `,
+      languageOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      }
     }
   ],
 
@@ -469,7 +486,7 @@ ruleTester.run("the-step-down-rule", rule, {
         ecmaVersion: 2022,
         sourceType: "module",
       },
-      errors: [{ message: `'midLevelMethod' ${errMsg}` }]
+      errors: [{ message: `'#midLevelMethod' ${errMsg}` }]
     },
   ]
 });
